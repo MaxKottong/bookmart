@@ -6,9 +6,9 @@ function Navbar() {
     const { user, logout } = useAuth();
 
     return (
-        <nav className="navbar navbar-expand-lg custom-navbar mb-0">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light mb-0">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/">BookMart</Link>
+                <Link className="navbar-brand text-black" to="/">BookMart</Link>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -20,14 +20,20 @@ function Navbar() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto flex-row align-items-center">
+                    <ul className="navbar-nav ms-auto flex-row align-items-center gap-3">
                         {!user ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link btn btn-primary" to="/login">Login</Link>
+                                    <Link className="nav-link btn btn-primary text-black" to="/home">Home</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link btn btn-secondary" to="/register">Register</Link>
+                                    <Link className="nav-link btn btn-secondary text-black" to="/about">About</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link btn btn-secondary text-black" to="/login">Login</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link btn btn-secondary text-black" to="/register">Register</Link>
                                 </li>
                             </>
                         ) : (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/book-style.css';
+import '../style/book-style.css'
 
 const EditBook = ({ book }) => {
     const navigate = useNavigate();

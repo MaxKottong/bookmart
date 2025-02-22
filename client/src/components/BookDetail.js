@@ -1,15 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/book-style.css'; // Import the shared styles
+import '../style/book-style.css'
 
 const BookDetail = ({ book }) => {
     const navigate = useNavigate();
 
     const mockBook = {
         id: 1,
-        title: "The Great Gatsby",
-        author: "F. Scott Fitzgerald",
-        description: "A novel set in the Jazz Age that tells the story of Jay Gatsby's love for Daisy Buchanan.",
+        title: "THE HOUSEMAID",
+        author: "Freida McFadden",
+        description: "The Housemaid by Freida McFadden is a psychological thriller about Millie, a desperate woman who takes a live-in maid job with the wealthy Winchester family, only to discover their dark and twisted secrets. As eerie events unfold and danger lurks within the house, Millie realizes she may not make it out alive..",
         price: "10.99",
         condition: "Like New",
         image: "/images/book3.png",

@@ -1,9 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
+
+    const handleAddBookRedirect = () =>{
+      navigate('/addbook');
+    }
+
+    const handleBookDetailRedirect =() =>{
+      navigate('/bookdetail');
+    }
 
     return (
 
@@ -73,7 +82,8 @@ const Profile = () => {
         <div className='card'>
           <div className='card-body'>
             <p>Add books to start selling!</p>
-          <button type="button" class="btn btn-dark">Click Here</button>
+          <button type="button" class="btn btn-dark" onClick={handleAddBookRedirect}>
+            Click Here</button>
           </div>
         </div>
       </div>
@@ -83,7 +93,8 @@ const Profile = () => {
       <h5>My Collection Book</h5>
         <div className='card'>
           <div className='card-body'>
-          <button type="button" class="btn btn-dark">Click Here</button>
+          <button type="button" class="btn btn-dark" onClick={handleBookDetailRedirect}>
+            Click Here</button>
           </div>
         </div>
       </div>

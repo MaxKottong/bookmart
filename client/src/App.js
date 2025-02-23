@@ -8,6 +8,8 @@ import Footer from './components/Footer';
 import AddBook from './components/AddBook';
 import BookDetail from './components/BookDetail';
 import EditBook from './components/EditBook';
+import Register from './components/Register';
+import Login from './components/Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -22,6 +24,9 @@ const App = () => {
                     <Route path="/addbook" element={<AddBook/>}/>
                     <Route path="/bookdetail" element={<BookDetail/>}/>
                     <Route Path="/editbook" elememt={<EditBook/>}/>
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+
                 </Routes>
                 <Footer />
             </Router>

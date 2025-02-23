@@ -14,21 +14,33 @@ const BookDetail = ({ book }) => {
         condition: "Like New",
         image: "/images/book3.png",
     };
+    const currentBook = book ?? mockBook;
+
+    const handleDelete = () => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this book");
+
+        if(isConfirmed){
+            console.log('Book with ID $(currentBook.id) deleted');
+            navigate('/profile');            
+        } else{
+            navigate('/profile');
+        }
+    };
 
     return (
         <div className="book-detail-container">
             <div className="book-image">
-                <img src={(book ?? mockBook).image} className='card-img-top' alt={(book ?? mockBook).title} />
+                <img src={(currentBook).image} className='card-img-top' alt={(currentBook).title} />
             </div>
             <div className="book-info">
-                <h2>{(book ?? mockBook).title}</h2>
-                <p><strong>Price:</strong> ${(book ?? mockBook).price}</p>
-                <p><strong>Description:</strong> {(book ?? mockBook).description}</p>
-                <p><strong>Condition:</strong> {(book ?? mockBook).condition}</p>
-                <p><strong>Author:</strong> {(book ?? mockBook).author}</p>
+                <h2>{(currentBook).title}</h2>
+                <p><strong>Price:</strong> ${(currentBook).price}</p>
+                <p><strong>Description:</strong> {(currentBook).description}</p>
+                <p><strong>Condition:</strong> {(currentBook).condition}</p>
+                <p><strong>Author:</strong> {(currentBook).author}</p>
                 <div className="button-group">
-                    <button className="edit-btn" onClick={() => navigate(`/editbook/${(book ?? mockBook).id}`)}>Edit</button>
-                    <button className="delete-btn">Delete</button>
+                    <button className="edit-btn" onClick={() => navigate(`/editbook/${(currentBook).id}`)}>Edit</button>
+                    <button className="delete-btn"onClick={handleDelete}>Delete</button>
                 </div>
             </div>
         </div>

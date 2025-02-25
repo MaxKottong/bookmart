@@ -18,7 +18,21 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
     ssl: {
-        rejectUnauthorized: false  // Allows SSL without verification of the server certificate
+        rejectUnauthorized: false
+    }
+});
+
+// Registration endpoint
+app.post('/api/register', async (req, res) => {
+    console.log(req.body);
+    const { username, email, password } = req.body.formData;
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+        await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3)', [username, email, hashedPassword]);
+        res.status(201).json({ message: 'Registration Successful!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error registering user' });
     }
 });
 

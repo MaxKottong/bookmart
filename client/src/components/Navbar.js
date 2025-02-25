@@ -24,7 +24,7 @@ function Navbar() {
                         {!user ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link btn btn-primary text-black" to="/home">Home</Link>
+                                    <Link className="nav-link btn btn-primary text-black" to="/">Home</Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link btn btn-secondary text-black" to="/about">About</Link>

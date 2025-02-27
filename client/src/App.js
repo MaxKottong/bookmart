@@ -19,7 +19,9 @@ const App = () => {
     return (
         <AuthProvider>
             <Router>
+                <div className='app-container'>
                 <Navbar />
+                <main>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
@@ -32,7 +34,9 @@ const App = () => {
 
                     <Route path="*" element={<NotFound />} />
                 </Routes>
+                </main>
                 <Footer />
+                </div>
             </Router>
         </AuthProvider>
     );

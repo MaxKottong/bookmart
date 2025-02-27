@@ -42,6 +42,9 @@ function Navbar() {
                                     <span className="navbar-text welcome-user">Welcome, {user}</span>
                                 </li>
                                 <li className="nav-item">
+                                    <Link className="nav-link btn btn-secondary text-black" to="/profile">Profile</Link>
+                                </li>
+                                <li className="nav-item">
                                     <button className="nav-link btn btn-logout" onClick={logout}>Logout</button>
                                 </li>
                             </>

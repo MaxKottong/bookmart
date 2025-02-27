@@ -9,7 +9,7 @@ const Profile = () => {
 
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:5000/api/profile/${user}`)
+            fetch(`http://localhost:5000/profile/${user}`)
                 .then(response => response.json())
                 .then(data => setUserData(data))
                 .catch(error => console.error('Error fetching user data:', error));
@@ -17,7 +17,7 @@ const Profile = () => {
     }, [user]);
 
     const handleSaveDescription = () => {
-        fetch(`http://localhost:5000/api/profile/${user}/description`, {
+        fetch(`http://localhost:5000/profile/${user}/description`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description: userData.description })

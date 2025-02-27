@@ -68,7 +68,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/api/profile/:username', async (req, res) => {
+app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
     try {
         const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
@@ -84,7 +84,7 @@ app.get('/api/profile/:username', async (req, res) => {
     }
 });
 
-app.put('/api/profile/:username/description', async (req, res) => {
+app.put('/profile/:username/description', async (req, res) => {
     const { username } = req.params;
     const { description } = req.body;
 

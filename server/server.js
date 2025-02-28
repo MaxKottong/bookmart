@@ -68,6 +68,22 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.post('/addbook', async (req, res) => {
+    const { title, author, price, description, condition } = req.body;
+    username = req.params;
+    console.log(username);
+    try {
+        console.log('check 2');
+        await pool.query('INSERT INTO books (title, author, price, description, condition) VALUES ($1, $2, $3, $4, $5)', [title, author, price, description, condition]);
+
+        console.log('check 3');
+        res.status(201).json({ message: 'Book Added Successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error adding Book' })
+    }
+});
+
 app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
     try {

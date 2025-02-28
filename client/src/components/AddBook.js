@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import '../style/addBook.css';
+import { useNavigate } from "react-router-dom";
+
 const AddBook = () => {
     // State for the form fields and image preview
+    const navigate = useNavigate();
     const [bookDetails, setBookDetails] = useState({
         title: '',
         author: '',
         price: '',
         description: '',
+        condition: 'Like New',
         image: null,
     });
     const [errors, setErrors] = useState({});
@@ -38,17 +42,31 @@ const AddBook = () => {
         if (!bookDetails.author) formErrors.author = 'Author is required';
         if (!bookDetails.price || bookDetails.price <= 0) formErrors.price = 'Price must be valid';
         if (!bookDetails.description) formErrors.description = 'Description is required';
+        if (!bookDetails.condition) formErrors.condition = 'Condition is required';
         if (!bookDetails.image) formErrors.image = 'Image is required';
 
         setErrors(formErrors);
         return Object.keys(formErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateForm()) {
-            console.log('Book details submitted:', bookDetails);
-        }
+
+        if (!validateForm()) return;
+
+        const response = await fetch('http://localhost:5000/addbook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bookDetails })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert('Book added successfully')
+            navigate('/bookdetail')
+        } else {
+            alert(data.message || 'Adding Book Failed')
+        };
     };
 
     return (
@@ -109,6 +127,23 @@ const AddBook = () => {
                         onChange={handleInputChange}
                         required
                     /> {errors.description && <p className="text-danger">{errors.description}</p>}
+                </div>
+
+                <div className="form-group mt-3">
+                    <label htmlFor="condition">Condition*</label>
+                    <select
+                        id="condition"
+                        name="condition"
+                        value={bookDetails.condition}
+                        onChange={handleInputChange}
+                        required
+                    >
+                        <option value="Like New">Like New</option>
+                        <option value="Very Good">Very Good</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                    </select>
                 </div>
 
                 {/* Image Upload */}

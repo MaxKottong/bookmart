@@ -68,9 +68,9 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.post('/addbook', async (req, res) => {
+app.post('/addbook/:username', async (req, res) => {
+    const { username } = req.params;
     const { title, author, price, description, condition } = req.body;
-    username = req.params;
     console.log(username);
     try {
         console.log('check 2');

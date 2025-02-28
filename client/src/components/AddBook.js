@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import '../style/addBook.css';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
 
 const AddBook = () => {
     // State for the form fields and image preview
     const navigate = useNavigate();
+    const { user } = useAuth();
+
     const [bookDetails, setBookDetails] = useState({
         title: '',
         author: '',
@@ -13,6 +16,7 @@ const AddBook = () => {
         condition: 'Like New',
         image: null,
     });
+
     const [errors, setErrors] = useState({});
     const [imagePreview, setImagePreview] = useState(null);
 
@@ -54,7 +58,7 @@ const AddBook = () => {
 
         if (!validateForm()) return;
 
-        const response = await fetch('http://localhost:5000/addbook', {
+        const response = await fetch(`http://localhost:5000/addbook/${user}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ bookDetails })

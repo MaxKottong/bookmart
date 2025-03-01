@@ -9,17 +9,19 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             try {
-                setUser(JSON.parse(storedUser));
+                setUser(JSON.parse(storedUser)); 
             } catch (error) {
                 console.error('Error parsing user from localStorage:', error);
                 localStorage.removeItem('user');
             }
         }
+        setLoading(false); 
     }, []);
 
     const login = (username) => {
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         user,
+        loading,
         login,
         logout,
     };

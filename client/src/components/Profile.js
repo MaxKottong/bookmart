@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const Profile = () => {
     const { username } = useParams();
+    const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
@@ -84,6 +85,7 @@ const Profile = () => {
                                             <p className='card-text'>Author: {book.author}</p>
                                             <p className='card-text'>Price: ${book.price}</p>
                                             <p className='card-text'><small className='text-muted'>{book.condition}</small></p>
+                                            <button className="btn btn-dark" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
                                         </div>
                                     </div>
                                 </div>

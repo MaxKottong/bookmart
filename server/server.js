@@ -95,7 +95,7 @@ app.post('/addbook/:username', async (req, res) => {
 app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
     try {
-        const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE username = $1', [username]);
+        const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE LOWER(u.username) = LOWER($1)', [username]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });

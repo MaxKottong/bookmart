@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
-    const { username } = useParams();
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        if (username) {
-            fetch(`http://localhost:5000/profile/${username}`)
+        if (user) {
+            fetch(`http://localhost:5000/profile/${user}`)
                 .then(response => response.json())
                 .then(data => setUserData(data))
                 .catch(error => console.error('Error fetching user data:', error));
         }
-    }, [username]);
+    }, [user]);
+
+    const handleSaveDescription = () => {
+        fetch(`http://localhost:5000/profile/${user}/description`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description: userData.description })
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                alert('Description saved successfully');
+            })
+            .catch((err) => console.error('Error saving description:', err));
+    };
+
+    const handleAddBookRedirect = () => navigate('/addbook');
+    const handleBookDetailRedirect = () => navigate('/bookdetail');
 
     return (
         <div className='container mt-5 mb-5'>
@@ -23,13 +41,17 @@ const Profile = () => {
                             <img src='/images/personIcon.png' className='rounded-circle' width='150' alt='user icon' />
                             <div className='mt-3 py-4'>
                                 <h6>{userData?.username || 'User Name'}</h6>
+                                <label htmlFor="formFileSm" className="form-label">Choose Profile Image</label>
+                                <input className="form-control form-control-sm" id="formFileSm" type="file" />
+                                <button type="button" className="btn btn-primary mt-3">Update Image</button>
                             </div>
+                            <button type="button" className="btn btn-danger mt-3">Logout</button>
                         </div>
                     </div>
                 </div>
                 <div className='col-md-8 mt-1'>
                     <div className='card mb-3 content'>
-                        <h1 className='m-3 pt-3'>{userData?.username}'s Info</h1>
+                        <h1 className='m-3 pt-3'>User's Info</h1>
                         <div className='card-body'>
                             <div className='row'>
                                 <div className='col-md-3'>
@@ -63,9 +85,27 @@ const Profile = () => {
                                     <h5>Description:</h5>
                                 </div>
                                 <div className='col-md-9 text-secondary'>
-                                    {userData?.description || 'No description available'}
+                                    <textarea
+                                        className="form-control"
+                                        rows="2"
+                                        placeholder='About the user, favorite books, hobbies, etc'
+                                        value={userData?.description}
+                                        onChange={(e) => setUserData({ ...userData, description: e.target.value })}>
+                                    </textarea>
+                                    <button type="button" className="btn btn-secondary mt-3" onClick={handleSaveDescription}>Save Description</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='row mt-3'>
+                <div className='col-md-12'>
+                    <h5>Sell Books</h5>
+                    <div className='card'>
+                        <div className='card-body'>
+                            <p>Add books to start selling!</p>
+                            <button type="button" className="btn btn-dark" onClick={handleAddBookRedirect}>Click Here</button>
                         </div>
                     </div>
                 </div>
@@ -84,16 +124,18 @@ const Profile = () => {
                                             <p className='card-text'>Author: {book.author}</p>
                                             <p className='card-text'>Price: ${book.price}</p>
                                             <p className='card-text'><small className='text-muted'>{book.condition}</small></p>
+                                            <button className="btn btn-dark" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
                                         </div>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p>No books found.</p>
+                            <p>No books found. Add books to your collection!</p>
                         )}
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 
@@ -66,6 +67,9 @@ const Login = () => {
             </div>
             {error && <p className="text-danger">{error}</p>}
             <button type="submit" className="btn btn-primary">Login</button>
+            <div className="d-flex align-items-center">
+                Don't have an account? Click Sign up to join us!<Link className="btn btn-primary ms-2" to="/register">Sign Up</Link>
+            </div>
         </form>
         </div>
     );

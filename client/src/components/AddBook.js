@@ -14,6 +14,7 @@ const AddBook = () => {
         author: '',
         price: '',
         description: '',
+        category: '',
         condition: 'Like New',
         image: null,
     });
@@ -47,6 +48,7 @@ const AddBook = () => {
         if (!bookDetails.author) formErrors.author = 'Author is required';
         if (!bookDetails.price || bookDetails.price <= 0) formErrors.price = 'Price must be valid';
         if (!bookDetails.description) formErrors.description = 'Description is required';
+        if (!bookDetails.category) formErrors.category = 'Category is required';
         if (!bookDetails.condition) formErrors.condition = 'Condition is required';
         if (!bookDetails.image) formErrors.image = 'Image is required';
 
@@ -136,6 +138,23 @@ const AddBook = () => {
                         onChange={handleInputChange}
                         required
                     /> {errors.description && <p className="text-danger">{errors.description}</p>}
+                </div>
+
+                <div className="form-group mt-3">
+                    <label htmlFor="category">Category</label>
+                    <select
+                        id="category"
+                        name="category"
+                        value={bookDetails.category}
+                        onChange={handleInputChange}
+                        required
+                    >
+                        <option value="Mystery">Mystery</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Non Fiction">Non Fiction</option>
+                    </select>
                 </div>
 
                 <div className="form-group mt-3">

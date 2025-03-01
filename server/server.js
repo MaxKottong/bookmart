@@ -70,7 +70,7 @@ app.post('/login', async (req, res) => {
 
 app.post('/addbook/:username', async (req, res) => {
     const { username } = req.params;
-    const { title, author, price, description, condition } = req.body.bookDetails;
+    const { title, author, price, description, category, condition } = req.body.bookDetails;
 
     try {
         const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
@@ -80,9 +80,9 @@ app.post('/addbook/:username', async (req, res) => {
         }
         const user_id = result.rows[0].user_id;
 
-        await pool.query('INSERT INTO books (owner, title, author, price, description, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, condition]);
+        await pool.query('INSERT INTO books (owner, title, author, price, description, category, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, category, condition]);
 
-        const bookResult = await pool.query('SELECT book_id FROM books WHERE owner = $1 AND title = $2 AND author = $3 AND price = $4 AND description = $5 AND condition = $6', [user_id, title, author, price, description, condition]);
+        const bookResult = await pool.query('SELECT book_id FROM books WHERE owner = $1 AND title = $2 AND author = $3 AND price = $4 AND description = $5 AND category = $6 AND condition = $7', [user_id, title, author, price, description, category, condition]);
         const bookId = bookResult.rows[0];
 
         res.status(201).json({ message: 'Book Added Successfully', bookId });

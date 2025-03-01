@@ -101,7 +101,26 @@ app.get('/profile/:username', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.status(200).json(result.rows[0]);
+        const userInfo = {
+            user_id: result.rows[0].user_id,
+            username: result.rows[0].username,
+            email: result.rows[0].email,
+            description: result.rows[0].description,
+            created_at: result.rows[0].created_at,
+            books: result.rows
+                .filter(row => row.book_id)
+                .map(r => ({
+                    book_id: r.book_id,
+                    title: r.title,
+                    author: r.author,
+                    price: r.price,
+                    condition: r.condition,
+                    image: r.image,
+                    isListed: r.isListed
+                }))
+        };
+
+        res.status(200).json(userInfo);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving user' });

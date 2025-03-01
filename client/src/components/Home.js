@@ -13,7 +13,7 @@ const Home = () => {
         <div className='custom-home text-center' style={{ backgroundImage: `url(${bgImage})` }}>
             <h1>Welcome to BookMart</h1>
             <h3>Your one-stop solution for book selling and buying.</h3>
-            <Link to={user ? "/inventory" : "/register"} className="btn btn-primary btn-lg">
+            <Link to={user ? "/profile" : "/login"} className="btn btn-primary btn-lg">
             {user ? "Go to Inventory" : "Get Started"}
             </Link>
         </div>

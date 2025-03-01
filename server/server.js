@@ -78,12 +78,14 @@ app.post('/addbook/:username', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
-
         const user_id = result.rows[0].user_id;
 
         await pool.query('INSERT INTO books (owner, title, author, price, description, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, condition]);
 
-        res.status(201).json({ message: 'Book Added Successfully' });
+        const bookResult = await pool.query('SELECT book_id FROM books WHERE owner = $1 AND title = $2 AND author = $3 AND price = $4 AND description = $5 AND condition = $6', [user_id, title, author, price, description, condition]);
+        const bookId = bookResult.rows[0];
+
+        res.status(201).json({ message: 'Book Added Successfully', bookId });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error adding Book' })
@@ -93,7 +95,7 @@ app.post('/addbook/:username', async (req, res) => {
 app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
     try {
-        const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+        const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE username = $1', [username]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });

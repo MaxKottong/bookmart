@@ -9,6 +9,7 @@ const AddBook = () => {
     const { user } = useAuth();
 
     const [bookDetails, setBookDetails] = useState({
+        id: 0,
         title: '',
         author: '',
         price: '',
@@ -66,8 +67,12 @@ const AddBook = () => {
 
         const data = await response.json();
         if (response.ok) {
-            alert('Book added successfully')
-            navigate('/bookdetail')
+            setBookDetails(prevDetails => {
+                const updatedDetails = { ...prevDetails, id: data.bookId?.book_id };
+                alert('Book added successfully')
+                navigate(`/bookdetail/${updatedDetails.id}`)
+                return updatedDetails;
+            });
         } else {
             alert(data.message || 'Adding Book Failed')
         };

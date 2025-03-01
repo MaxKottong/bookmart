@@ -70,13 +70,19 @@ app.post('/login', async (req, res) => {
 
 app.post('/addbook/:username', async (req, res) => {
     const { username } = req.params;
-    const { title, author, price, description, condition } = req.body;
-    console.log(username);
-    try {
-        console.log('check 2');
-        await pool.query('INSERT INTO books (title, author, price, description, condition) VALUES ($1, $2, $3, $4, $5)', [title, author, price, description, condition]);
+    const { title, author, price, description, condition } = req.body.bookDetails;
 
-        console.log('check 3');
+    try {
+        const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user_id = result.rows[0].user_id;
+
+        await pool.query('INSERT INTO books (owner, title, author, price, description, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, condition]);
+
         res.status(201).json({ message: 'Book Added Successfully' });
     } catch (error) {
         console.error(error);

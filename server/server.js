@@ -70,7 +70,7 @@ app.post('/login', async (req, res) => {
 
 app.post('/addbook/:username', async (req, res) => {
     const { username } = req.params;
-    const { title, author, price, description, condition } = req.body.bookDetails;
+    const { title, author, price, description, category, condition } = req.body.bookDetails;
 
     try {
         const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
@@ -80,9 +80,9 @@ app.post('/addbook/:username', async (req, res) => {
         }
         const user_id = result.rows[0].user_id;
 
-        await pool.query('INSERT INTO books (owner, title, author, price, description, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, condition]);
+        await pool.query('INSERT INTO books (owner, title, author, price, description, category, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, category, condition]);
 
-        const bookResult = await pool.query('SELECT book_id FROM books WHERE owner = $1 AND title = $2 AND author = $3 AND price = $4 AND description = $5 AND condition = $6', [user_id, title, author, price, description, condition]);
+        const bookResult = await pool.query('SELECT book_id FROM books WHERE owner = $1 AND title = $2 AND author = $3 AND price = $4 AND description = $5 AND category = $6 AND condition = $7', [user_id, title, author, price, description, category, condition]);
         const bookId = bookResult.rows[0];
 
         res.status(201).json({ message: 'Book Added Successfully', bookId });
@@ -94,32 +94,51 @@ app.post('/addbook/:username', async (req, res) => {
 
 app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
-    try {
-        const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE username = $1', [username]);
 
+    try {
+        const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE LOWER(u.username) = LOWER($1)', [username]);
+        console.log(result.rows.length);
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.status(200).json(result.rows[0]);
+        const userInfo = {
+            user_id: result.rows[0].user_id,
+            username: result.rows[0].username,
+            email: result.rows[0].email,
+            about: result.rows[0].about,
+            created_at: result.rows[0].created_at,
+            books: result.rows
+                .filter(row => row.book_id)
+                .map(r => ({
+                    book_id: r.book_id,
+                    title: r.title,
+                    author: r.author,
+                    price: r.price,
+                    condition: r.condition,
+                    image: r.image,
+                    isListed: r.isListed
+                }))
+        };
+
+        res.status(200).json(userInfo);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving user' });
     }
 });
 
-app.put('/profile/:username/description', async (req, res) => {
+app.put('/profile/:username/about', async (req, res) => {
     const { username } = req.params;
-    const { description } = req.body;
+    const { about } = req.body;
 
     try {
-        const result = await pool.query('UPDATE users SET description = $1 WHERE username = $2 RETURNING *', [description, username]);
+        const result = await pool.query('UPDATE users SET about = $1 WHERE username = $2 RETURNING *', [about, username]);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        res.json({ message: 'Description updated successfully', user: result.rows[0] });
+        res.json({ message: 'About updated successfully', user: result.rows[0] });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error updating description' });

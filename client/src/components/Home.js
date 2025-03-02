@@ -14,7 +14,7 @@ const Home = () => {
             <h1>Welcome to BookMart</h1>
             <h3>Your one-stop solution for book selling and buying.</h3>
             <Link to={user ? "/profile" : "/login"} className="btn btn-primary btn-lg">
-            {user ? "Go to Inventory" : "Get Started"}
+            {user ? "Go to Profile" : "Get Started"}
             </Link>
         </div>
         <div className='padding'>

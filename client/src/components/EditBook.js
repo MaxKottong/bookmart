@@ -190,6 +190,25 @@ const EditBook = () => {
                         <option value="Thriller">Thriller</option>
                         <option value="Fantasy">Fantasy</option>
                         <option value="Non Fiction">Non Fiction</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Poetry">Poetry</option>
+                        <option value="Science Fiction">Science Fiction</option>
+                        <option value="Crime">Crime</option>
+                        <option value="Young Adult">Young Adult</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Classics">Classics</option>
+                        <option value="Autobiography">Autobiography</option>
+                        <option value="Fiction & Literature">Fiction & Literature</option>
+                        <option value="Humor">Humor</option>
+                        <option value="Health & Fitness">Health & Fitness</option>
+                        <option value="History">History</option>
+                        <option value="Coming-of-age">Coming-of-age</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Fairytale">Fairytale</option>
+                        <option value="Short Story">Short Story</option>
+                        <option value="Graphic Novel">Graphic Novel</option>
+                        <option value="New Adult">New Adult</option>
+                        <option value="Guide/How-to">Guide/How-to</option>
                     </select>
                     {errors.category && <p className="text-danger">{errors.category}</p>}
                 </div>

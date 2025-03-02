@@ -121,20 +121,15 @@ const Profile = () => {
                     <div className="row">
                         {userData?.books?.length > 0 ? (
                             userData.books.map((book) => (
-                                <div key={book.book_id} className="col-md-4 d-flex">
-                                    <div className="card mb-3 flex-fill">
-                                        <img
-                                            src={book.image || 'https://placehold.co/300x500'}
-                                            className="card-img-top"
-                                            alt={book.title}
-                                            style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-                                        />
-                                        <div className="card-body">
+                                <div key={book.book_id} className="col-md-4">
+                                    <div className="card mb-3 d-flex flex-column h-100">
+                                        <img src={book.image || 'https://placehold.co/300x500'} className="card-img-top" alt={book.title} />
+                                        <div className="card-body d-flex flex-column">
                                             <h5 className="card-title">{book.title}</h5>
                                             <p className="card-text">Author: {book.author}</p>
                                             <p className="card-text">Price: ${book.price}</p>
                                             <p className="card-text"><small className="text-muted">{book.condition}</small></p>
-                                            <button className="btn btn-dark" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
+                                            <button className="btn btn-dark mt-auto" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
                                         </div>
                                     </div>
                                 </div>

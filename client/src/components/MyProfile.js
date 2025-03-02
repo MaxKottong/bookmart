@@ -16,18 +16,23 @@ const Profile = () => {
         }
     }, [user]);
 
-    const handleSaveDescription = () => {
-        fetch(`http://localhost:5000/profile/${user}/description`, {
+    const handleSaveabout = () => {
+        fetch(`http://localhost:5000/profile/${user}/about`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ description: userData.description })
+            body: JSON.stringify({ about: userData.about })
         })
             .then((res) => res.json())
             .then((data) => {
-                alert('Description saved successfully');
+                setUserData((prevData) => ({
+                    ...prevData,
+                    about: data.about,
+                }));
+                alert('About saved successfully');
             })
-            .catch((err) => console.error('Error saving description:', err));
+            .catch((err) => console.error('Error saving about:', err));
     };
+
 
     const handleAddBookRedirect = () => navigate('/addbook');
     const handleBookDetailRedirect = () => navigate('/bookdetail');
@@ -82,17 +87,17 @@ const Profile = () => {
                             <hr />
                             <div className='row'>
                                 <div className='col-md-3'>
-                                    <h5>Description:</h5>
+                                    <h5>About Me:</h5>
                                 </div>
                                 <div className='col-md-9 text-secondary'>
                                     <textarea
                                         className="form-control"
                                         rows="2"
                                         placeholder='About the user, favorite books, hobbies, etc'
-                                        value={userData?.description}
-                                        onChange={(e) => setUserData({ ...userData, description: e.target.value })}>
+                                        value={userData?.about}
+                                        onChange={(e) => setUserData({ ...userData, about: e.target.value })}>
                                     </textarea>
-                                    <button type="button" className="btn btn-secondary mt-3" onClick={handleSaveDescription}>Save Description</button>
+                                    <button type="button" className="btn btn-secondary mt-3" onClick={handleSaveabout}>Save about</button>
                                 </div>
                             </div>
                         </div>
@@ -110,20 +115,25 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            <div className='row mt-3'>
-                <div className='col-md-12'>
+            <div className="row mt-3">
+                <div className="col-md-12">
                     <h5>Owned Books</h5>
-                    <div className='row'>
+                    <div className="row">
                         {userData?.books?.length > 0 ? (
                             userData.books.map((book) => (
-                                <div key={book.book_id} className='col-md-4'>
-                                    <div className='card mb-3'>
-                                        <img src={book.image || 'https://placehold.co/300x500'} className='card-img-top' alt={book.title} />
-                                        <div className='card-body'>
-                                            <h5 className='card-title'>{book.title}</h5>
-                                            <p className='card-text'>Author: {book.author}</p>
-                                            <p className='card-text'>Price: ${book.price}</p>
-                                            <p className='card-text'><small className='text-muted'>{book.condition}</small></p>
+                                <div key={book.book_id} className="col-md-4 d-flex">
+                                    <div className="card mb-3 flex-fill">
+                                        <img
+                                            src={book.image || 'https://placehold.co/300x500'}
+                                            className="card-img-top"
+                                            alt={book.title}
+                                            style={{ width: '100%', height: '300px', objectFit: 'cover' }}
+                                        />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{book.title}</h5>
+                                            <p className="card-text">Author: {book.author}</p>
+                                            <p className="card-text">Price: ${book.price}</p>
+                                            <p className="card-text"><small className="text-muted">{book.condition}</small></p>
                                             <button className="btn btn-dark" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
                                         </div>
                                     </div>
@@ -135,7 +145,6 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };

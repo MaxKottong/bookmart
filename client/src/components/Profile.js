@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import NotFound from './NotFound';
 
 const Profile = () => {
     const { username } = useParams();
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
+    const [notFound, setNotFound] = useState(false);
 
     useEffect(() => {
         if (username) {
             fetch(`http://localhost:5000/profile/${username}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (response.status === 404) {
+                        setNotFound(true);
+                        return null;
+                    }
+                    return response.json();
+                })
                 .then(data => setUserData(data))
                 .catch(error => console.error('Error fetching user data:', error));
         }
     }, [username]);
+
+    if (notFound) {
+        return <NotFound />;
+    }
+
+    if (!userData) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className='container mt-5 mb-5'>
@@ -61,10 +77,10 @@ const Profile = () => {
                             <hr />
                             <div className='row'>
                                 <div className='col-md-3'>
-                                    <h5>Description:</h5>
+                                    <h5>About Them:</h5>
                                 </div>
                                 <div className='col-md-9 text-secondary'>
-                                    {userData?.description || 'No description available'}
+                                    {userData?.about || 'No About available'}
                                 </div>
                             </div>
                         </div>

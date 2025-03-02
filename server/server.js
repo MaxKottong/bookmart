@@ -94,9 +94,10 @@ app.post('/addbook/:username', async (req, res) => {
 
 app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
+
     try {
         const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE LOWER(u.username) = LOWER($1)', [username]);
-
+        console.log(result.rows.length);
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -105,7 +106,7 @@ app.get('/profile/:username', async (req, res) => {
             user_id: result.rows[0].user_id,
             username: result.rows[0].username,
             email: result.rows[0].email,
-            description: result.rows[0].description,
+            about: result.rows[0].about,
             created_at: result.rows[0].created_at,
             books: result.rows
                 .filter(row => row.book_id)
@@ -127,18 +128,17 @@ app.get('/profile/:username', async (req, res) => {
     }
 });
 
-app.put('/profile/:username/description', async (req, res) => {
+app.put('/profile/:username/about', async (req, res) => {
     const { username } = req.params;
-    const { description } = req.body;
+    const { about } = req.body;
 
     try {
-        const result = await pool.query('UPDATE users SET description = $1 WHERE username = $2 RETURNING *', [description, username]);
+        const result = await pool.query('UPDATE users SET about = $1 WHERE username = $2 RETURNING *', [about, username]);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        res.json({ message: 'Description updated successfully', user: result.rows[0] });
+        res.json({ message: 'About updated successfully', user: result.rows[0] });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error updating description' });

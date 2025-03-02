@@ -145,19 +145,56 @@ app.put('/profile/:username/about', async (req, res) => {
     }
 });
 
+app.put('/editbook/:bookId/:username', async (req, res) => {
+    const { bookId, username } = req.params;
+    const { title, author, price, description, category, condition, image } = req.body;
+
+    try {
+        const bookResult = await pool.query('SELECT owner FROM books WHERE book_id = $1', [bookId]);
+
+        if (bookResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        const bookOwner = bookResult.rows[0].owner;
+
+        const userResult = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const userId = userResult.rows[0].user_id;
+
+        if (bookOwner !== userId) {
+            return res.status(403).json({ message: 'Unauthorized to edit this book' });
+        }
+
+        await pool.query(
+            'UPDATE books SET title = $1, author = $2, price = $3, description = $4, category = $5, condition = $6, image = $7 WHERE book_id = $8',
+            [title, author, price, description, category, condition, image, bookId]
+        );
+
+        res.status(200).json({ message: 'Book updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating book' });
+    }
+});
+
 app.get('/bookdetail/:bookId', async (req, res) => {
     const { bookId } = req.params;
     const { username } = req.body;
-    console.log(username);
 
     try {
         const result = await pool.query('SELECT * FROM books WHERE book_id = $1', [bookId]);
+        const userId = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'Book not found' });
         }
 
-        res.status(200).json(result.rows[0]);
+        res.status(200).json(result.rows[0], result, userId);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving book details' });
@@ -167,7 +204,7 @@ app.get('/bookdetail/:bookId', async (req, res) => {
 app.delete('/deletebook/:bookId', async (req, res) => {
     const { bookId } = req.params;
     const { username } = req.body; 
-    console.log(bookId, username);
+
     try {
         const bookResult = await pool.query('SELECT owner FROM books WHERE book_id = $1', [bookId]);
 
@@ -195,6 +232,23 @@ app.delete('/deletebook/:bookId', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error deleting book' });
+    }
+});
+
+app.get('/userid/:username', async (req, res) => {
+    const { username } = req.params;
+
+    try {
+        const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ user_id: result.rows[0].user_id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving user ID' });
     }
 });
 

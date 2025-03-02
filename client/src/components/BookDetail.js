@@ -10,6 +10,24 @@ const BookDetail = () => {
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/userid/${user}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                const data = await response.json();
+                setUserId(data.user_id);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+
+        fetchUserId();
+    }, [user]);
 
     useEffect(() => {
         const fetchBookDetail = async () => {
@@ -32,8 +50,6 @@ const BookDetail = () => {
 
     const handleDelete = async () => {
         const isConfirmed = window.confirm("Are you sure you want to delete this book");
-        console.log(user);
-        console.log(bookId);
 
         if (isConfirmed) {
             try {
@@ -71,8 +87,8 @@ const BookDetail = () => {
         return <div>No book found</div>;
     }
 
-    const isOwner = user && user.user_id === book.owner;
-
+    const isOwner = userId && userId === book.owner;
+    console.log(userId, book.owner);
     return (
         <div className="book-detail-container">
             <div className="book-image">

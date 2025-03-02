@@ -87,27 +87,27 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            <div className='row mt-3'>
-                <div className='col-md-12'>
+            <div className="row mt-3">
+                <div className="col-md-12">
                     <h5>Owned Books</h5>
-                    <div className='row'>
+                    <div className="row">
                         {userData?.books?.length > 0 ? (
                             userData.books.map((book) => (
-                                <div key={book.book_id} className='col-md-4'>
-                                    <div className='card mb-3'>
-                                        <img src={book.image || 'https://placehold.co/300x500'} className='card-img-top' alt={book.title} />
-                                        <div className='card-body'>
-                                            <h5 className='card-title'>{book.title}</h5>
-                                            <p className='card-text'>Author: {book.author}</p>
-                                            <p className='card-text'>Price: ${book.price}</p>
-                                            <p className='card-text'><small className='text-muted'>{book.condition}</small></p>
-                                            <button className="btn btn-dark" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
+                                <div key={book.book_id} className="col-md-4">
+                                    <div className="card mb-3 d-flex flex-column h-100">
+                                        <img src={book.image || 'https://placehold.co/300x500'} className="card-img-top" alt={book.title} />
+                                        <div className="card-body d-flex flex-column">
+                                            <h5 className="card-title">{book.title}</h5>
+                                            <p className="card-text">Author: {book.author}</p>
+                                            <p className="card-text">Price: ${book.price}</p>
+                                            <p className="card-text"><small className="text-muted">{book.condition}</small></p>
+                                            <button className="btn btn-dark mt-auto" onClick={() => navigate(`/bookdetail/${book.book_id}`)}>View Details</button>
                                         </div>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p>No books found.</p>
+                            <p>No books found. Add books to your collection!</p>
                         )}
                     </div>
                 </div>

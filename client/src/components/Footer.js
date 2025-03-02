@@ -10,8 +10,8 @@ const Footer = () => {
             <div className='container'>
                 <div className='row'>
                     <div className='col col-lg-4'>
-                        <h4>BookMark</h4>
-                        <p>BookMark is your ultimate destination for book selling and buying, creating a bridge between readers and sellers</p>
+                        <h4>BookMart</h4>
+                        <p>BookMart is your ultimate destination for book selling and buying, creating a bridge between readers and sellers</p>
                     </div>
                     <div className='col'>
                         <h4>Links</h4>

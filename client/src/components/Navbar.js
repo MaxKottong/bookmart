@@ -44,9 +44,7 @@ function Navbar() {
                                 <li className="nav-item">
                                     <Link className="nav-link btn btn-secondary text-black" to="/profile">Profile</Link>
                                 </li>
-                                <li className="nav-item">
-                                    <button className="nav-link btn btn-logout" onClick={logout}>Logout</button>
-                                </li>
+
                             </>
                         )}
                     </ul>

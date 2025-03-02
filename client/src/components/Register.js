@@ -22,8 +22,14 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const passwordReq = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{7,}$/;
+        if (!passwordReq.test(formData.password)) {
+            setError("Password must be at least 7 characters, containing 1 uppercase and 1 special character.");
+            return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
-            setError("Passwords do not match");
+            setError("Passwords do not match.");
             return;
         }
 

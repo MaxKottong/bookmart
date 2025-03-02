@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import '../style/book-style.css';
 
 const BookDetail = () => {
     const navigate = useNavigate();
     const { bookId } = useParams();
+    const { user } = useAuth();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -28,12 +30,30 @@ const BookDetail = () => {
         fetchBookDetail();
     }, [bookId]);
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         const isConfirmed = window.confirm("Are you sure you want to delete this book");
+        console.log(user);
+        console.log(bookId);
 
         if (isConfirmed) {
-            console.log(`Book with ID ${book.id} deleted`);
-            navigate('/profile');
+            try {
+                const response = await fetch(`http://localhost:5000/deletebook/${book.book_id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user})
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+
+                alert('Book deleted successfully');
+                navigate('/profile');
+            } catch (error) {
+                console.error('Error deleting book:', error);
+                alert('An error occurred while deleting the book. Please try again.');
+            }
         } else {
             navigate('/profile');
         }
@@ -63,7 +83,7 @@ const BookDetail = () => {
                 <p><strong>Condition:</strong> {book.condition}</p>
                 <p><strong>Author:</strong> {book.author}</p>
                 <div className="button-group">
-                    <button className="edit-btn" onClick={() => navigate(`/editbook/${book.id}`)}>Edit</button>
+                    <button className="edit-btn" onClick={() => navigate(`/editbook/${book.book_id}`)}>Edit</button>
                     <button className="delete-btn" onClick={handleDelete}>Delete</button>
                 </div>
             </div>

@@ -80,7 +80,7 @@ app.post('/addbook/:username', async (req, res) => {
         }
         const user_id = result.rows[0].user_id;
 
-        await pool.query('INSERT INTO books (owner, title, author, price, description, category, condition) VALUES ($1, $2, $3, $4, $5, $6)', [user_id, title, author, price, description, category, condition]);
+        await pool.query('INSERT INTO books (owner, title, author, price, description, category, condition) VALUES ($1, $2, $3, $4, $5, $6, $7)', [user_id, title, author, price, description, category, condition]);
 
         const bookResult = await pool.query('SELECT book_id FROM books WHERE owner = $1 AND title = $2 AND author = $3 AND price = $4 AND description = $5 AND category = $6 AND condition = $7', [user_id, title, author, price, description, category, condition]);
         const bookId = bookResult.rows[0];
@@ -160,6 +160,40 @@ app.get('/bookdetail/:bookId', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving book details' });
+    }
+});
+
+app.delete('/deletebook/:bookId', async (req, res) => {
+    const { bookId } = req.params;
+    const { username } = req.body; 
+    console.log(bookId, username);
+    try {
+        const bookResult = await pool.query('SELECT owner FROM books WHERE book_id = $1', [bookId]);
+
+        if (bookResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        const bookOwner = bookResult.rows[0].owner;
+
+        const userResult = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const userId = userResult.rows[0].user_id;
+
+        if (bookOwner !== userId) {
+            return res.status(403).json({ message: 'Unauthorized to delete this book' });
+        }
+
+        await pool.query('DELETE FROM books WHERE book_id = $1', [bookId]);
+
+        res.status(200).json({ message: 'Book deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting book' });
     }
 });
 

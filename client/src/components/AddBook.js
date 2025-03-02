@@ -59,23 +59,31 @@ const AddBook = () => {
 
         if (!validateForm()) return;
 
-        const response = await fetch(`http://localhost:5000/addbook/${user}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ bookDetails })
-        });
+        try {
+            const response = await fetch(`http://localhost:5000/addbook/${user}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bookDetails })
+            });
 
-        const data = await response.json();
-        if (response.ok) {
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            const data = await response.json();
+
             setBookDetails(prevDetails => {
                 const updatedDetails = { ...prevDetails, id: data.bookId?.book_id };
-                alert('Book added successfully')
-                navigate(`/bookdetail/${updatedDetails.id}`)
                 return updatedDetails;
             });
-        } else {
-            alert(data.message || 'Adding Book Failed')
-        };
+
+            alert('Book added successfully');
+            navigate(`/bookdetail/${data.bookId?.book_id}`);
+        } catch (error) {
+            console.error('Error adding book:', error);
+            alert('An error occurred while adding the book. Please try again.');
+        }
     };
 
     return (

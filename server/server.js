@@ -126,6 +126,23 @@ app.put('/profile/:username/description', async (req, res) => {
     }
 });
 
+app.get('/bookdetail/:bookId', async (req, res) => {
+    const { bookId } = req.params;
+    console.log(bookId);
+
+    try {
+        const result = await pool.query('SELECT * FROM books WHERE book_id = $1', [bookId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        res.status(200).json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving book details' });
+    }
+});
 
 // Start the server
 app.listen(PORT, () => {

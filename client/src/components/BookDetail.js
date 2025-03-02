@@ -1,51 +1,74 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../style/book-style.css'
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import '../style/book-style.css';
 
-const BookDetail = ({ book }) => {
+const BookDetail = () => {
     const navigate = useNavigate();
+    const { bookId } = useParams();
+    const [book, setBook] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const mockBook = {
-        id: 1,
-        title: "THE HOUSEMAID",
-        author: "Freida McFadden",
-        description: "The Housemaid by Freida McFadden is a psychological thriller about Millie, a desperate woman who takes a live-in maid job with the wealthy Winchester family, only to discover their dark and twisted secrets. As eerie events unfold and danger lurks within the house, Millie realizes she may not make it out alive..",
-        price: "10.99",
-        condition: "Like New",
-        image: "/images/book3.png",
-    };
-    const currentBook = book ?? mockBook;
+    useEffect(() => {
+        const fetchBookDetail = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/bookdetail/${bookId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch book details');
+                }
+                const data = await response.json();
+                setBook(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBookDetail();
+    }, [bookId]);
 
     const handleDelete = () => {
         const isConfirmed = window.confirm("Are you sure you want to delete this book");
 
-        if(isConfirmed){
-            console.log('Book with ID $(currentBook.id) deleted');
-            navigate('/profile');            
-        } else{
+        if (isConfirmed) {
+            console.log(`Book with ID ${book.id} deleted`);
+            navigate('/profile');
+        } else {
             navigate('/profile');
         }
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!book) {
+        return <div>No book found</div>;
+    }
+
     return (
         <div className="book-detail-container">
             <div className="book-image">
-                <img src={(currentBook).image} className='card-img-top' alt={(currentBook).title} />
+                <img src={book.image} className='card-img-top' alt={book.title} />
             </div>
             <div className="book-info">
-                <h2>{(currentBook).title}</h2>
-                <p><strong>Price:</strong> ${(currentBook).price}</p>
-                <p><strong>Description:</strong> {(currentBook).description}</p>
-                <p><strong>Condition:</strong> {(currentBook).condition}</p>
-                <p><strong>Author:</strong> {(currentBook).author}</p>
+                <h2>{book.title}</h2>
+                <p><strong>Price:</strong> ${book.price}</p>
+                <p><strong>Description:</strong> {book.description}</p>
+                <p><strong>Condition:</strong> {book.condition}</p>
+                <p><strong>Author:</strong> {book.author}</p>
                 <div className="button-group">
-                    <button className="edit-btn" onClick={() => navigate(`/editbook/${(currentBook).id}`)}>Edit</button>
-                    <button className="delete-btn"onClick={handleDelete}>Delete</button>
+                    <button className="edit-btn" onClick={() => navigate(`/editbook/${book.id}`)}>Edit</button>
+                    <button className="delete-btn" onClick={handleDelete}>Delete</button>
                 </div>
             </div>
         </div>
     );
 };
-
 
 export default BookDetail;

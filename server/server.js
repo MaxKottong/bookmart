@@ -24,7 +24,7 @@ const pool = new Pool({
 
 // Registration endpoint
 app.post('/api/register', async (req, res) => {
-    console.log(req.body);
+    console.log("1", req.body);
     const { username, email, password } = req.body.formData;
     const date = new Date().toLocaleDateString();
     try {
@@ -97,7 +97,7 @@ app.get('/profile/:username', async (req, res) => {
 
     try {
         const result = await pool.query('SELECT * FROM users u LEFT JOIN books b ON b.owner = u.user_id WHERE LOWER(u.username) = LOWER($1)', [username]);
-        console.log(result.rows.length);
+        console.log("2", result.rows.length);
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }

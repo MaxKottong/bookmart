@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
 
@@ -50,7 +50,7 @@ const Profile = () => {
                                 <input className="form-control form-control-sm" id="formFileSm" type="file" />
                                 <button type="button" className="btn btn-primary mt-3">Update Image</button>
                             </div>
-                            <button type="button" className="btn btn-danger mt-3">Logout</button>
+                            <button type="button" className="btn btn-danger mt-3" onClick= { logout } >Logout</button>
                         </div>
                     </div>
                 </div>

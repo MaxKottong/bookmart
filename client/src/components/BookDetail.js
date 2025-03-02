@@ -71,6 +71,8 @@ const BookDetail = () => {
         return <div>No book found</div>;
     }
 
+    const isOwner = user && user.user_id === book.owner;
+
     return (
         <div className="book-detail-container">
             <div className="book-image">
@@ -82,10 +84,12 @@ const BookDetail = () => {
                 <p><strong>Description:</strong> {book.description}</p>
                 <p><strong>Condition:</strong> {book.condition}</p>
                 <p><strong>Author:</strong> {book.author}</p>
-                <div className="button-group">
-                    <button className="edit-btn" onClick={() => navigate(`/editbook/${book.book_id}`)}>Edit</button>
-                    <button className="delete-btn" onClick={handleDelete}>Delete</button>
-                </div>
+                {isOwner && (
+                    <div className="button-group">
+                        <button className="edit-btn" onClick={() => navigate(`/editbook/${book.book_id}`)}>Edit</button>
+                        <button className="delete-btn" onClick={handleDelete}>Delete</button>
+                    </div>
+                )}
             </div>
         </div>
     );

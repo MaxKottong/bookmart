@@ -147,7 +147,8 @@ app.put('/profile/:username/about', async (req, res) => {
 
 app.get('/bookdetail/:bookId', async (req, res) => {
     const { bookId } = req.params;
-    console.log(bookId);
+    const { username } = req.body;
+    console.log(username);
 
     try {
         const result = await pool.query('SELECT * FROM books WHERE book_id = $1', [bookId]);
